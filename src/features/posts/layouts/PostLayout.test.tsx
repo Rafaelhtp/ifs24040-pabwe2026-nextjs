@@ -1,6 +1,6 @@
 import React from "react";
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { screen, fireEvent, waitFor } from "@testing-library/react";
+import { screen, fireEvent } from "@testing-library/react";
 import PostLayout from "./PostLayout";
 import { renderWithProviders } from "@/test-utils";
 import * as apiHelper from "@/helpers/apiHelper";
@@ -30,20 +30,22 @@ describe("PostLayout", () => {
     vi.restoreAllMocks();
   });
 
-  it("should redirect to /auth/login if no token", () => {
+  it("should render children without redirecting if no token is present", () => {
     vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce(null);
 
     renderWithProviders(
       <PostLayout>
-        <div>Dashboard Child</div>
+        <div data-testid="dash-child">Dashboard Child</div>
       </PostLayout>
     );
 
-    expect(mockReplace).toHaveBeenCalledWith("/auth/login");
+    expect(screen.getByTestId("dash-child")).toBeInTheDocument();
+    expect(mockReplace).not.toHaveBeenCalled();
   });
 
-  it("should render children directly if user already loaded in redux", () => {
+  it("should render children directly and not fetch profile if user already loaded in redux", () => {
     vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce("valid-token");
+    const profileSpy = vi.spyOn(userActions, "asyncSetProfile");
 
     renderWithProviders(
       <PostLayout>
@@ -64,11 +66,12 @@ describe("PostLayout", () => {
     );
 
     expect(screen.getByTestId("dash-child")).toBeInTheDocument();
+    expect(profileSpy).not.toHaveBeenCalled();
   });
 
-  it("should load profile if user is not loaded in redux", async () => {
+  it("should fetch profile if token exists but user is not loaded in redux", () => {
     vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce("valid-token");
-    vi.spyOn(userActions, "asyncSetProfile").mockReturnValue((() =>
+    const profileSpy = vi.spyOn(userActions, "asyncSetProfile").mockReturnValue((() =>
       Promise.resolve({ success: true, user: mockUser })) as any);
 
     renderWithProviders(
@@ -89,37 +92,8 @@ describe("PostLayout", () => {
       }
     );
 
-    await waitFor(() => {
-      expect(screen.getByTestId("dash-child")).toBeInTheDocument();
-    });
-  });
-
-  it("should still render children if profile loading fails but token exists", async () => {
-    vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce("valid-token");
-    vi.spyOn(userActions, "asyncSetProfile").mockReturnValue((() =>
-      Promise.resolve({ success: false, message: "Server busy" })) as any);
-
-    renderWithProviders(
-      <PostLayout>
-        <div data-testid="dash-child">Child</div>
-      </PostLayout>,
-      {
-        preloadedState: {
-          auth: {
-            user: null,
-            token: "valid-token",
-            isAuthLogin: false,
-            isAuthRegister: false,
-            isAuthLogout: false,
-            error: null,
-          },
-        },
-      }
-    );
-
-    await waitFor(() => {
-      expect(screen.getByTestId("dash-child")).toBeInTheDocument();
-    });
+    expect(screen.getByTestId("dash-child")).toBeInTheDocument();
+    expect(profileSpy).toHaveBeenCalled();
   });
 
   it("should open and close mobile sidebar", () => {
