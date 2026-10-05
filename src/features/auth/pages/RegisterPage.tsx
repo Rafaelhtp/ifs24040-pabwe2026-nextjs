@@ -214,7 +214,8 @@ export function RegisterPage() {
         Sudah memiliki akun?{" "}
         <Link
           href="/auth/login"
-          className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
+          prefetch={false}
+          className="font-medium text-blue-700 hover:text-blue-600 underline underline-offset-4"
         >
           Masuk di sini
         </Link>

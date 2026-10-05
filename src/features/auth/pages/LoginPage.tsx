@@ -142,7 +142,8 @@ export function LoginPage() {
         Belum punya akun?{" "}
         <Link
           href="/auth/register"
-          className="font-medium text-blue-600 hover:text-blue-500 hover:underline"
+          prefetch={false}
+          className="font-medium text-blue-700 hover:text-blue-600 underline underline-offset-4"
         >
           Daftar di sini
         </Link>
