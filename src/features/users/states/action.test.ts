@@ -90,7 +90,13 @@ describe("users actions and thunks", () => {
       const res = await asyncSetUsers()(dispatch);
 
       expect(dispatch).toHaveBeenCalledWith(getUsersFailAction("Network"));
-      expect(res).toEqual({ success: false, message: "Network" });
+      vi.spyOn(userApi, "getUsers").mockResolvedValueOnce({ status: "fail", message: "" });
+      const resDefUsers = await asyncSetUsers()(dispatch);
+      expect(resDefUsers.message).toBe("Gagal mengambil daftar pengguna");
+
+      vi.spyOn(userApi, "getUsers").mockRejectedValueOnce("Non error");
+      const resNonErrUsers = await asyncSetUsers()(dispatch);
+      expect(resNonErrUsers.message).toBe("Terjadi kesalahan");
     });
   });
 
@@ -121,9 +127,17 @@ describe("users actions and thunks", () => {
       const res = await asyncSetProfile()(dispatch);
       expect(res.success).toBe(false);
 
+      vi.spyOn(userApi, "getUserProfile").mockResolvedValueOnce({ status: "fail", message: "" });
+      const resDefProf = await asyncSetProfile()(dispatch);
+      expect(resDefProf.message).toBe("Gagal mengambil profil");
+
       vi.spyOn(userApi, "getUserProfile").mockRejectedValueOnce(new Error("Net Error"));
       const resErr = await asyncSetProfile()(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(userApi, "getUserProfile").mockRejectedValueOnce("Net Error");
+      const resNonErrProf = await asyncSetProfile()(dispatch);
+      expect(resNonErrProf.message).toBe("Terjadi kesalahan");
     });
   });
 
@@ -147,9 +161,17 @@ describe("users actions and thunks", () => {
       const resFail = await asyncUpdateProfile({ name: "New", email: "new@b.com" })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(userApi, "putUserProfile").mockResolvedValueOnce({ status: "fail", message: "" });
+      const resDefUpd = await asyncUpdateProfile({ name: "New", email: "new@b.com" })(dispatch);
+      expect(resDefUpd.message).toBe("Gagal memperbarui profil");
+
       vi.spyOn(userApi, "putUserProfile").mockRejectedValueOnce(new Error("Net Error"));
       const resErr = await asyncUpdateProfile({ name: "New", email: "new@b.com" })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(userApi, "putUserProfile").mockRejectedValueOnce("Net Error");
+      const resNonErrUpd = await asyncUpdateProfile({ name: "New", email: "new@b.com" })(dispatch);
+      expect(resNonErrUpd.message).toBe("Terjadi kesalahan");
     });
   });
 
@@ -174,9 +196,17 @@ describe("users actions and thunks", () => {
       const resFail = await asyncUpdatePhoto(file)(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(userApi, "postUserPhoto").mockResolvedValueOnce({ status: "fail", message: "" });
+      const resDefPhoto = await asyncUpdatePhoto(file)(dispatch);
+      expect(resDefPhoto.message).toBe("Gagal memperbarui foto profil");
+
       vi.spyOn(userApi, "postUserPhoto").mockRejectedValueOnce(new Error("Upload Error"));
       const resErr = await asyncUpdatePhoto(file)(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(userApi, "postUserPhoto").mockRejectedValueOnce("Upload Error");
+      const resNonErrPhoto = await asyncUpdatePhoto(file)(dispatch);
+      expect(resNonErrPhoto.message).toBe("Terjadi kesalahan");
     });
   });
 
@@ -198,9 +228,17 @@ describe("users actions and thunks", () => {
       const resFail = await asyncUpdatePassword({ password: "old", new_password: "new" })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(userApi, "putUserPassword").mockResolvedValueOnce({ status: "fail", message: "" });
+      const resDefPw = await asyncUpdatePassword({ password: "old", new_password: "new" })(dispatch);
+      expect(resDefPw.message).toBe("Gagal mengubah kata sandi");
+
       vi.spyOn(userApi, "putUserPassword").mockRejectedValueOnce(new Error("Net Error"));
       const resErr = await asyncUpdatePassword({ password: "old", new_password: "new" })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(userApi, "putUserPassword").mockRejectedValueOnce("Net Error");
+      const resNonErrPw = await asyncUpdatePassword({ password: "old", new_password: "new" })(dispatch);
+      expect(resNonErrPw.message).toBe("Terjadi kesalahan");
     });
   });
 });

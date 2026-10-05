@@ -4,8 +4,8 @@ import { ActionType } from "@/types/action";
 
 describe("authReducer", () => {
   it("should return initial state when called without state or action", () => {
-    // @ts-expect-error test undefined action
     expect(authReducer(undefined, undefined)).toEqual(initialAuthState);
+    expect(authReducer(initialAuthState, null as any)).toEqual(initialAuthState);
   });
 
   it("should return unchanged state for unknown action", () => {

@@ -117,9 +117,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncSetPosts()(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "getPosts").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncSetPosts()(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "getPosts").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncSetPosts()(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "getPosts").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncSetPosts()(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -144,9 +155,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncSetPostDetail(1)(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "getPostDetail").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncSetPostDetail(1)(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "getPostDetail").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncSetPostDetail(1)(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "getPostDetail").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncSetPostDetail(1)(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -169,9 +191,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncAddPost({ description: "Desc" })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "postPost").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncAddPost({ description: "Desc" })(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "postPost").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncAddPost({ description: "Desc" })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "postPost").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncAddPost({ description: "Desc" })(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -194,9 +227,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncChangePost(1, { description: "Desc" })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "putPost").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncChangePost(1, { description: "Desc" })(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "putPost").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncChangePost(1, { description: "Desc" })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "putPost").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncChangePost(1, { description: "Desc" })(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -220,9 +264,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncChangeCoverPost(1, file)(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "postPostCover").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncChangeCoverPost(1, file)(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "postPostCover").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncChangeCoverPost(1, file)(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "postPostCover").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncChangeCoverPost(1, file)(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -245,9 +300,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncDeletePost(1)(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "deletePost").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncDeletePost(1)(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "deletePost").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncDeletePost(1)(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "deletePost").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncDeletePost(1)(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -259,7 +325,7 @@ describe("posts actions and thunks", () => {
       });
 
       const dispatch = vi.fn();
-      const res = await asyncLikePost(1, { like: 1 })(dispatch);
+      const res = await asyncLikePost(1, { is_like: 1 })(dispatch);
       expect(dispatch).toHaveBeenCalledWith(likePostSuccessAction());
       expect(res.success).toBe(true);
 
@@ -267,12 +333,23 @@ describe("posts actions and thunks", () => {
         status: "fail",
         message: "Err",
       });
-      const resFail = await asyncLikePost(1, { like: 1 })(dispatch);
+      const resFail = await asyncLikePost(1, { is_like: 1 })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "postPostLike").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncLikePost(1, { is_like: 1 })(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "postPostLike").mockRejectedValueOnce(new Error("Net"));
-      const resErr = await asyncLikePost(1, { like: 1 })(dispatch);
+      const resErr = await asyncLikePost(1, { is_like: 1 })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "postPostLike").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncLikePost(1, { is_like: 1 })(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -295,9 +372,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncAddComment(1, { comment: "Great" })(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "postPostComment").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncAddComment(1, { comment: "Great" })(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "postPostComment").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncAddComment(1, { comment: "Great" })(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "postPostComment").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncAddComment(1, { comment: "Great" })(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -320,9 +408,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncDeleteComment(1)(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "deletePostComment").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncDeleteComment(1)(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "deletePostComment").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncDeleteComment(1)(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "deletePostComment").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncDeleteComment(1)(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 
@@ -345,9 +444,20 @@ describe("posts actions and thunks", () => {
       const resFail = await asyncDeleteAllPosts()(dispatch);
       expect(resFail.success).toBe(false);
 
+      vi.spyOn(postApi, "deleteAllPosts").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resFailEmpty = await asyncDeleteAllPosts()(dispatch);
+      expect(resFailEmpty.success).toBe(false);
+
       vi.spyOn(postApi, "deleteAllPosts").mockRejectedValueOnce(new Error("Net"));
       const resErr = await asyncDeleteAllPosts()(dispatch);
       expect(resErr.success).toBe(false);
+
+      vi.spyOn(postApi, "deleteAllPosts").mockRejectedValueOnce("String error");
+      const resErrStr = await asyncDeleteAllPosts()(dispatch);
+      expect(resErrStr.success).toBe(false);
     });
   });
 });

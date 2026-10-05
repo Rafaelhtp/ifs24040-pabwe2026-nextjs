@@ -147,7 +147,7 @@ describe("apiHelper", () => {
         json: async () => {
           throw new Error("Invalid JSON");
         },
-      } as Response);
+      } as unknown as Response);
 
       const res = await apiRequest("/error");
       expect(res.status).toBe("error");
@@ -161,10 +161,37 @@ describe("apiHelper", () => {
         json: async () => {
           throw new Error("Invalid JSON");
         },
-      } as Response);
+      } as unknown as Response);
 
       const res = await apiRequest("/empty");
       expect(res.status).toBe("success");
+    });
+
+    it("should format relative url without leading slash", async () => {
+      vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+        ok: true,
+        json: async () => ({ status: "success" }),
+      } as unknown as Response);
+
+      await apiRequest("posts");
+      expect(fetch).toHaveBeenCalledWith(
+        expect.stringMatching(/\/posts$/),
+        expect.anything()
+      );
+    });
+
+    it("should fallback message when statusText is empty on error", async () => {
+      vi.spyOn(globalThis, "fetch").mockResolvedValueOnce({
+        ok: false,
+        statusText: "",
+        json: async () => {
+          throw new Error("Invalid JSON");
+        },
+      } as unknown as Response);
+
+      const res = await apiRequest("/error");
+      expect(res.status).toBe("error");
+      expect(res.message).toBe("Terjadi kesalahan saat memproses data");
     });
   });
 });

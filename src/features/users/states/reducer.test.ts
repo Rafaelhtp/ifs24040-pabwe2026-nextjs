@@ -4,8 +4,8 @@ import { ActionType } from "@/types/action";
 
 describe("usersReducer", () => {
   it("should return initial state when called with undefined", () => {
-    // @ts-expect-error test undefined
     expect(usersReducer(undefined, undefined)).toEqual(initialUsersState);
+    expect(usersReducer(initialUsersState, null as any)).toEqual(initialUsersState);
   });
 
   it("should return unchanged state for unknown action", () => {

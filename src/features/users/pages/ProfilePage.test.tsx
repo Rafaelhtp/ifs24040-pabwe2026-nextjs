@@ -234,11 +234,67 @@ describe("ProfilePage", () => {
     await userEvent.type(screen.getByLabelText("Kata Sandi Saat Ini"), "wrongold");
     await userEvent.type(screen.getByLabelText("Kata Sandi Baru"), "newsecret123");
     await userEvent.type(screen.getByLabelText("Konfirmasi Kata Sandi Baru"), "newsecret123");
-
     fireEvent.click(screen.getByText("Ubah Kata Sandi"));
 
     await waitFor(() => {
       expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Kata sandi lama salah");
     });
+  });
+
+  it("should render loading indicators and buttons in loading state", () => {
+    renderWithProviders(<ProfilePage />, {
+      preloadedState: {
+        users: {
+          users: [],
+          profile: mockProfile,
+          isUsers: false,
+          isProfile: false,
+          isUpdateProfile: true,
+          isUpdatePhoto: true,
+          isUpdatePassword: true,
+          error: null,
+        },
+      },
+    });
+
+    expect(screen.getByText("Menyimpan...")).toBeInTheDocument();
+    expect(screen.getByText("Mengubah...")).toBeInTheDocument();
+  });
+
+  it("should render fallback initials when photo is not present or name is empty", () => {
+    const { unmount } = renderWithProviders(<ProfilePage />, {
+      preloadedState: {
+        users: {
+          users: [],
+          profile: { id: 2, name: "Alpha Beta", email: "ab@delcom.org", photo: "", created_at: "", updated_at: "" },
+          isUsers: false,
+          isProfile: false,
+          isUpdateProfile: false,
+          isUpdatePhoto: false,
+          isUpdatePassword: false,
+          error: null,
+        },
+      },
+    });
+
+    expect(screen.getByText("AL")).toBeInTheDocument();
+    unmount();
+
+    renderWithProviders(<ProfilePage />, {
+      preloadedState: {
+        users: {
+          users: [],
+          profile: { id: 3, name: "", email: "noname@delcom.org", photo: "", created_at: "", updated_at: "" },
+          isUsers: false,
+          isProfile: false,
+          isUpdateProfile: false,
+          isUpdatePhoto: false,
+          isUpdatePassword: false,
+          error: null,
+        },
+      },
+    });
+
+    expect(screen.getByText("U")).toBeInTheDocument();
   });
 });

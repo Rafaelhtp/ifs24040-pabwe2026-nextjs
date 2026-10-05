@@ -250,12 +250,86 @@ describe("HomePage", () => {
     });
   });
 
-  it("should open and close Add Modal", () => {
+  it("should handle delete all posts failure", async () => {
+    mockSearchParams = new URLSearchParams("filter=my");
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeleteAllPosts").mockReturnValue((() =>
+      Promise.resolve({ success: false, message: "Gagal menghapus" })) as any);
+
+    renderWithProviders(<HomePage />, {
+      preloadedState: {
+        auth: { user: mockUser, token: "tok", isAuthLogin: false, isAuthRegister: false, isAuthLogout: false, error: null },
+        posts: {
+          posts: [mockPosts[0]],
+          post: null,
+          isPost: false,
+          isPostAdd: false,
+          isPostAdded: false,
+          isPostChange: false,
+          isPostChanged: false,
+          isPostChangeCover: false,
+          isPostChangedCover: false,
+          isPostDelete: false,
+          isPostDeleted: false,
+          isPostLike: false,
+          isPostLiked: false,
+          isPostAddComment: false,
+          isPostAddedComment: false,
+          isPostDeleteComment: false,
+          isPostDeletedComment: false,
+          isPostDeleteAll: false,
+          isPostDeletedAll: false,
+          error: null,
+        },
+      },
+    });
+
+    fireEvent.click(screen.getByText("Hapus Semua"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal menghapus");
+    });
+
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeleteAllPosts").mockReturnValue((() =>
+      Promise.resolve({ success: false })) as any);
+
+    fireEvent.click(screen.getByText("Hapus Semua"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal menghapus postingan");
+    });
+  });
+
+  it("should open, submit successfully and close Add Modal", async () => {
+    const setPostsSpy = vi.spyOn(postActions, "asyncSetPosts").mockReturnValue((() =>
+      Promise.resolve({ success: true, posts: [] })) as any);
+    vi.spyOn(postActions, "asyncAddPost").mockReturnValue((() =>
+      Promise.resolve({ success: true, message: "OK" })) as any);
+
     renderWithProviders(<HomePage />);
 
     fireEvent.click(screen.getByText("Buat Postingan"));
     expect(screen.getByText("Buat Postingan Baru")).toBeInTheDocument();
 
+    const textarea = screen.getByLabelText("Apa yang ingin Anda bagikan?");
+    await userEvent.type(textarea, "Postingan baru dari modal");
+    fireEvent.click(screen.getByRole("button", { name: "Terbitkan" }));
+
+    await waitFor(() => {
+      expect(toolsHelper.showSuccessDialog).toHaveBeenCalledWith("Postingan berhasil diterbitkan!");
+      expect(setPostsSpy).toHaveBeenCalled();
+    });
+
+    // Also test with filter=my
+    mockSearchParams = new URLSearchParams("filter=my");
+    fireEvent.click(screen.getByText("Buat Postingan"));
+    await userEvent.type(screen.getByLabelText("Apa yang ingin Anda bagikan?"), "Postingan saya baru");
+    fireEvent.click(screen.getByRole("button", { name: "Terbitkan" }));
+
+    await waitFor(() => {
+      expect(setPostsSpy).toHaveBeenCalledWith({ is_me: 1 });
+    });
+
+    fireEvent.click(screen.getByText("Buat Postingan"));
     fireEvent.click(screen.getByText("Batal"));
     expect(screen.queryByText("Buat Postingan Baru")).not.toBeInTheDocument();
   });

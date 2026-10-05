@@ -91,6 +91,21 @@ describe("auth actions and thunks", () => {
       expect(dispatch).toHaveBeenCalledWith(authLoginFailAction("Network Error"));
       expect(result).toEqual({ success: false, message: "Network Error" });
     });
+
+    it("should handle login fail with default error message and non-Error throw", async () => {
+      vi.spyOn(authApi, "postLogin").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+
+      const dispatch = vi.fn();
+      const result = await asyncSetIsAuthLogin({ email: "a@b.com", password: "123" })(dispatch);
+      expect(result).toEqual({ success: false, message: "Gagal login" });
+
+      vi.spyOn(authApi, "postLogin").mockRejectedValueOnce("String error");
+      const resultNonErr = await asyncSetIsAuthLogin({ email: "a@b.com", password: "123" })(dispatch);
+      expect(resultNonErr).toEqual({ success: false, message: "Terjadi kesalahan" });
+    });
   });
 
   describe("asyncSetIsAuthRegister", () => {
@@ -129,7 +144,7 @@ describe("auth actions and thunks", () => {
       expect(result).toEqual({ success: false, message: "Email sudah terdaftar" });
     });
 
-    it("should handle rejection during registration", async () => {
+    it("should handle rejection during registration and default error", async () => {
       vi.spyOn(authApi, "postRegister").mockRejectedValueOnce(new Error("Timeout"));
 
       const dispatch = vi.fn();
@@ -141,6 +156,17 @@ describe("auth actions and thunks", () => {
 
       expect(dispatch).toHaveBeenCalledWith(authRegisterFailAction("Timeout"));
       expect(result).toEqual({ success: false, message: "Timeout" });
+
+      vi.spyOn(authApi, "postRegister").mockResolvedValueOnce({
+        status: "fail",
+        message: "",
+      });
+      const resDef = await asyncSetIsAuthRegister({ name: "A", email: "a@b.com", password: "123" })(dispatch);
+      expect(resDef).toEqual({ success: false, message: "Gagal registrasi" });
+
+      vi.spyOn(authApi, "postRegister").mockRejectedValueOnce("String error");
+      const resNonErr = await asyncSetIsAuthRegister({ name: "A", email: "a@b.com", password: "123" })(dispatch);
+      expect(resNonErr).toEqual({ success: false, message: "Terjadi kesalahan" });
     });
   });
 

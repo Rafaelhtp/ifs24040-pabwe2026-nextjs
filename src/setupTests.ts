@@ -1,3 +1,4 @@
+import "@testing-library/jest-dom/vitest";
 import "@testing-library/jest-dom";
 
 // Mock matchMedia for responsive / drawer tests

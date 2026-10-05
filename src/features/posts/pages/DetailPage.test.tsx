@@ -340,7 +340,11 @@ describe("DetailPage", () => {
     });
   });
 
-  it("should open edit and cover modals", () => {
+  it("should handle delete comment failure", async () => {
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeleteComment").mockReturnValue((() =>
+      Promise.resolve({ success: false, message: "Gagal hapus komentar" })) as any);
+
     renderWithProviders(<DetailPage />, {
       preloadedState: {
         auth: { user: mockUser, token: "tok", isAuthLogin: false, isAuthRegister: false, isAuthLogout: false, error: null },
@@ -369,10 +373,141 @@ describe("DetailPage", () => {
       },
     });
 
+    fireEvent.click(screen.getByLabelText("Hapus komentar"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal hapus komentar");
+    });
+
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeleteComment").mockReturnValue((() =>
+      Promise.resolve({ success: false })) as any);
+
+    fireEvent.click(screen.getByLabelText("Hapus komentar"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal menghapus komentar");
+    });
+  });
+
+  it("should handle delete post failure", async () => {
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeletePost").mockReturnValue((() =>
+      Promise.resolve({ success: false, message: "Gagal hapus post" })) as any);
+
+    renderWithProviders(<DetailPage />, {
+      preloadedState: {
+        auth: { user: mockUser, token: "tok", isAuthLogin: false, isAuthRegister: false, isAuthLogout: false, error: null },
+        posts: {
+          posts: [],
+          post: mockPost,
+          isPost: false,
+          isPostAdd: false,
+          isPostAdded: false,
+          isPostChange: false,
+          isPostChanged: false,
+          isPostChangeCover: false,
+          isPostChangedCover: false,
+          isPostDelete: false,
+          isPostDeleted: false,
+          isPostLike: false,
+          isPostLiked: false,
+          isPostAddComment: false,
+          isPostAddedComment: false,
+          isPostDeleteComment: false,
+          isPostDeletedComment: false,
+          isPostDeleteAll: false,
+          isPostDeletedAll: false,
+          error: null,
+        },
+      },
+    });
+
+    fireEvent.click(screen.getByText("Hapus Postingan"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal hapus post");
+    });
+
+    (toolsHelper.showConfirmDialog as any).mockResolvedValueOnce(true);
+    vi.spyOn(postActions, "asyncDeletePost").mockReturnValue((() =>
+      Promise.resolve({ success: false })) as any);
+
+    fireEvent.click(screen.getByText("Hapus Postingan"));
+    await waitFor(() => {
+      expect(toolsHelper.showErrorDialog).toHaveBeenCalledWith("Gagal menghapus postingan");
+    });
+  });
+
+  it("should open edit and cover modals and handle their onSuccess/onClose callbacks", async () => {
+    const detailSpy = vi.spyOn(postActions, "asyncSetPostDetail").mockReturnValue((() =>
+      Promise.resolve({ success: true, post: mockPost })) as any);
+    vi.spyOn(postActions, "asyncChangePost").mockReturnValue((() =>
+      Promise.resolve({ success: true, message: "OK" })) as any);
+    vi.spyOn(postActions, "asyncChangeCoverPost").mockReturnValue((() =>
+      Promise.resolve({ success: true, message: "OK" })) as any);
+
+    renderWithProviders(<DetailPage />, {
+      preloadedState: {
+        auth: { user: mockUser, token: "tok", isAuthLogin: false, isAuthRegister: false, isAuthLogout: false, error: null },
+        posts: {
+          posts: [],
+          post: mockPost,
+          isPost: false,
+          isPostAdd: false,
+          isPostAdded: false,
+          isPostChange: false,
+          isPostChanged: false,
+          isPostChangeCover: false,
+          isPostChangedCover: false,
+          isPostDelete: false,
+          isPostDeleted: false,
+          isPostLike: false,
+          isPostLiked: false,
+          isPostAddComment: false,
+          isPostAddedComment: false,
+          isPostDeleteComment: false,
+          isPostDeletedComment: false,
+          isPostDeleteAll: false,
+          isPostDeletedAll: false,
+          error: null,
+        },
+      },
+    });
+
+    // Test Edit Modal
     fireEvent.click(screen.getByText("Edit"));
     expect(screen.getByText("Edit Postingan")).toBeInTheDocument();
 
+    const textarea = screen.getByLabelText("Deskripsi Postingan");
+    await userEvent.clear(textarea);
+    await userEvent.type(textarea, "Updated post content");
+    fireEvent.click(screen.getByText("Simpan Perubahan"));
+
+    await waitFor(() => {
+      expect(toolsHelper.showSuccessDialog).toHaveBeenCalledWith("Postingan berhasil diperbarui!");
+      expect(detailSpy).toHaveBeenCalled();
+    });
+
+    // Test Edit Modal Close
+    fireEvent.click(screen.getByText("Edit"));
+    fireEvent.click(screen.getByText("Batal"));
+    expect(screen.queryByText("Edit Postingan")).not.toBeInTheDocument();
+
+    // Test Cover Modal
     fireEvent.click(screen.getByText("Sampul"));
     expect(screen.getByText("Ubah Sampul Postingan")).toBeInTheDocument();
+
+    const file = new File(["dummy"], "cover.png", { type: "image/png" });
+    const fileInput = document.querySelector('input[type="file"]') as HTMLInputElement;
+    await userEvent.upload(fileInput, file);
+
+    fireEvent.click(screen.getByText("Unggah Sampul"));
+    await waitFor(() => {
+      expect(toolsHelper.showSuccessDialog).toHaveBeenCalledWith("Foto sampul berhasil diperbarui!");
+      expect(detailSpy).toHaveBeenCalled();
+    });
+
+    // Test Cover Modal Close
+    fireEvent.click(screen.getByText("Sampul"));
+    fireEvent.click(screen.getByText("Batal"));
+    expect(screen.queryByText("Ubah Sampul Postingan")).not.toBeInTheDocument();
   });
 });

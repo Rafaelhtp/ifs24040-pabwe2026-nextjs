@@ -12,18 +12,17 @@ export default defineConfig({
       provider: "v8",
       reporter: ["text", "json", "html", "lcov"],
       include: [
+        "src/features/**/states/**/*.{ts,tsx}",
+        "src/features/**/api/**/*.{ts,tsx}",
         "src/helpers/**/*.{ts,tsx}",
         "src/hooks/**/*.{ts,tsx}",
         "src/lib/**/*.{ts,tsx}",
         "src/store.ts",
-        "src/server.ts",
-        "src/components/**/*.{ts,tsx}",
-        "src/features/**/*.{ts,tsx}",
-        "src/app/**/*.{ts,tsx}",
       ],
       exclude: [
         "src/setupTests.ts",
         "src/test-utils.tsx",
+        "src/server.ts",
         "src/types/**",
         "**/*.d.ts",
         "**/*.test.{ts,tsx}",
@@ -39,7 +38,7 @@ export default defineConfig({
   },
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      "@": path.resolve(import.meta.dirname, "./src"),
     },
   },
 });
