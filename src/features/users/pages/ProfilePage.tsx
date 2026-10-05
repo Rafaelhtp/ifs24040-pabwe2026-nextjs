@@ -139,7 +139,8 @@ export function ProfilePage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={displayPhoto}
-                  alt={profile?.name || "Foto Profil"}
+                  alt=""
+                  aria-hidden="true"
                   className="w-28 h-28 rounded-full object-cover border-4 border-slate-100 shadow-sm mx-auto"
                 />
               ) : (

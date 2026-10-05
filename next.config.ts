@@ -5,7 +5,6 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   compress: true,
   experimental: {
-    inlineCss: true,
     optimizePackageImports: ["@tabler/icons-react"],
   },
   turbopack: {
@@ -19,7 +18,6 @@ const nextConfig: NextConfig = {
         source: "/:path*",
         headers: [
           { key: "X-Robots-Tag", value: "index, follow" },
-          { key: "X-Content-Type-Options", value: "nosniff" },
         ],
       },
     ];

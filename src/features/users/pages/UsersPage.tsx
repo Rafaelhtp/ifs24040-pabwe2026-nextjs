@@ -89,7 +89,8 @@ export function UsersPage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={user.photo}
-                  alt={user.name}
+                  alt=""
+                  aria-hidden="true"
                   className="w-12 h-12 rounded-full object-cover border border-slate-200 shrink-0"
                 />
               ) : (

@@ -222,7 +222,8 @@ export function HomePage() {
                         // eslint-disable-next-line @next/next/no-img-element
                         <img
                           src={post.author.photo}
-                          alt={post.author.name}
+                          alt=""
+                          aria-hidden="true"
                           className="w-9 h-9 rounded-full object-cover border border-slate-200"
                         />
                       ) : (

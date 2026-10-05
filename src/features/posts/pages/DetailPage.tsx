@@ -175,7 +175,8 @@ export function DetailPage() {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={post.author.photo}
-                  alt={post.author.name}
+                  alt=""
+                  aria-hidden="true"
                   className="w-11 h-11 rounded-full object-cover border border-slate-200"
                 />
               ) : (

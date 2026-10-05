@@ -69,7 +69,8 @@ export function NavbarComponent({ onToggleSidebar }: NavbarProps) {
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   src={user.photo}
-                  alt={user?.name || "Profil"}
+                  alt=""
+                  aria-hidden="true"
                   className="w-8 h-8 rounded-full object-cover border border-slate-200"
                 />
               ) : (
