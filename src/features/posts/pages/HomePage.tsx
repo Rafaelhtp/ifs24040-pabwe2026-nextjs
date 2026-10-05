@@ -171,16 +171,16 @@ export function HomePage() {
 
       {/* Posts list */}
       {isPost && posts.length === 0 ? (
-        <div className="py-20 flex flex-col items-center justify-center text-slate-400" data-testid="posts-loading">
+        <div className="py-20 flex flex-col items-center justify-center text-slate-600" data-testid="posts-loading">
           <IconLoader2 size={36} className="animate-spin text-blue-600 mb-2" />
           <p className="text-sm font-medium">Memuat postingan...</p>
         </div>
       ) : filteredPosts.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-3">
+          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-500 mb-3">
             <IconNews size={24} />
           </div>
-          <h3 className="text-base font-semibold text-slate-800">Tidak ada postingan</h3>
+          <h2 className="text-base font-semibold text-slate-800">Tidak ada postingan</h2>
           <p className="text-sm text-slate-500 mt-1 max-w-sm mx-auto">
             {searchQuery
               ? `Tidak ditemukan postingan yang cocok dengan "${searchQuery}".`
@@ -234,7 +234,7 @@ export function HomePage() {
                         <p className="text-sm font-semibold text-slate-800">
                           {post.author?.name || "Anonim"}
                         </p>
-                        <time className="text-xs text-slate-400">
+                        <time className="text-xs text-slate-500">
                           {formatDate(post.created_at)}
                         </time>
                       </div>

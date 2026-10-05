@@ -13,6 +13,10 @@ export const metadata: Metadata = {
   title: "Delcom Posts - Aplikasi Postingan",
   description: "Platform sosial dan berbagi informasi Delcom Posts untuk mahasiswa dan komunitas Delcom.",
   metadataBase: new URL("https://ifs24040-pabwe2026-nextjs.vercel.app"),
+  robots: {
+    index: true,
+    follow: true,
+  },
   openGraph: {
     title: "Delcom Posts - Aplikasi Postingan",
     description: "Platform sosial dan berbagi informasi Delcom Posts.",

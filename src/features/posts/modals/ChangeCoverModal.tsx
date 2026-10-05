@@ -94,8 +94,8 @@ export function ChangeCoverModal({
                   className="w-full h-full object-cover opacity-75"
                 />
               ) : (
-                <div className="text-center text-slate-400">
-                  <IconPhoto size={40} className="mx-auto mb-1" />
+                <div className="text-center text-slate-600">
+                  <IconPhoto size={40} className="mx-auto mb-1 text-slate-500" />
                   <p className="text-xs">Belum ada gambar yang dipilih</p>
                 </div>
               )}

@@ -53,7 +53,7 @@ export function DetailPage() {
 
   if (isPost && !post) {
     return (
-      <div className="py-24 flex flex-col items-center justify-center text-slate-400" data-testid="detail-loading">
+      <div className="py-24 flex flex-col items-center justify-center text-slate-600" data-testid="detail-loading">
         <IconLoader2 size={36} className="animate-spin text-blue-600 mb-2" />
         <p className="text-sm font-medium">Memuat detail postingan...</p>
       </div>
@@ -63,7 +63,7 @@ export function DetailPage() {
   if (!post) {
     return (
       <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-        <h3 className="text-lg font-bold text-slate-800">Postingan Tidak Ditemukan</h3>
+        <h1 className="text-lg font-bold text-slate-800">Postingan Tidak Ditemukan</h1>
         <p className="text-sm text-slate-500 mt-1 mb-4">
           Postingan mungkin telah dihapus atau tidak tersedia.
         </p>
@@ -187,7 +187,7 @@ export function DetailPage() {
                 <h1 className="text-base font-bold text-slate-800">
                   {post.author?.name || "Anonim"}
                 </h1>
-                <time className="text-xs text-slate-400">
+                <time className="text-xs text-slate-500">
                   {formatDate(post.created_at)}
                 </time>
               </div>
@@ -302,7 +302,7 @@ export function DetailPage() {
         {/* Comments list */}
         <div className="space-y-4 pt-4 border-t border-slate-100">
           {!post.comments || post.comments.length === 0 ? (
-            <p className="text-sm text-slate-400 italic py-4 text-center">
+            <p className="text-sm text-slate-500 italic py-4 text-center">
               Belum ada komentar untuk postingan ini. Jadilah yang pertama berkomentar!
             </p>
           ) : (
@@ -317,7 +317,7 @@ export function DetailPage() {
                   className="p-4 bg-slate-50 rounded-xl border border-slate-100 space-y-1.5"
                 >
                   <div className="flex items-center justify-between">
-                    <span className="text-xs text-slate-400">
+                    <span className="text-xs text-slate-500">
                       {formatDate(comment.created_at)}
                     </span>
                     {isMyComment && (

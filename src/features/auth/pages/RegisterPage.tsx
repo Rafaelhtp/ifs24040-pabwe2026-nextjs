@@ -80,7 +80,7 @@ export function RegisterPage() {
   return (
     <div>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-slate-800">Daftar Akun</h2>
+        <h1 className="text-2xl font-bold text-slate-800">Daftar Akun</h1>
         <p className="text-sm text-slate-500 mt-1">
           Bergabunglah dengan komunitas Delcom Posts
         </p>

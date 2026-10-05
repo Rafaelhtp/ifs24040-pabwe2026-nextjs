@@ -60,18 +60,18 @@ export function UsersPage() {
 
       {/* Users grid */}
       {isUsers && users.length === 0 ? (
-        <div className="py-24 flex flex-col items-center justify-center text-slate-400" data-testid="users-loading">
+        <div className="py-24 flex flex-col items-center justify-center text-slate-600" data-testid="users-loading">
           <IconLoader2 size={36} className="animate-spin text-blue-600 mb-2" />
           <p className="text-sm font-medium">Memuat data pengguna...</p>
         </div>
       ) : filteredUsers.length === 0 ? (
         <div className="bg-white rounded-2xl border border-slate-200 p-12 text-center">
-          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-400 mb-3">
+          <div className="w-12 h-12 bg-slate-100 rounded-full flex items-center justify-center mx-auto text-slate-500 mb-3">
             <IconUsers size={24} />
           </div>
-          <h3 className="text-base font-semibold text-slate-800">
+          <h2 className="text-base font-semibold text-slate-800">
             Pengguna Tidak Ditemukan
-          </h3>
+          </h2>
           <p className="text-sm text-slate-500 mt-1">
             {searchQuery
               ? `Tidak ada pengguna yang cocok dengan pencarian "${searchQuery}".`
@@ -106,7 +106,7 @@ export function UsersPage() {
                   <IconMail size={14} className="mr-1 shrink-0 text-slate-400" />
                   <span className="truncate">{user.email}</span>
                 </div>
-                <div className="flex items-center text-xs text-slate-400 mt-1">
+                <div className="flex items-center text-xs text-slate-500 mt-1">
                   <IconCalendar size={14} className="mr-1 shrink-0" />
                   <span>Bergabung {formatDate(user.created_at)}</span>
                 </div>

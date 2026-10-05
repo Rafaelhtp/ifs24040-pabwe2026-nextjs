@@ -176,7 +176,7 @@ export function ProfilePage() {
               <p className="text-xs text-slate-500">{profile?.email}</p>
             </div>
 
-            <div className="pt-3 border-t border-slate-100 text-xs text-slate-400">
+            <div className="pt-3 border-t border-slate-100 text-xs text-slate-600">
               Format: PNG, JPG, WEBP. Maks 2MB.
             </div>
           </div>

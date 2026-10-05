@@ -75,7 +75,7 @@ export function SidebarComponent({ isOpen = false, onClose }: SidebarProps) {
         ))}
       </nav>
 
-      <div className="px-4 pt-4 border-t border-slate-100 text-xs text-slate-400">
+      <div className="px-4 pt-4 border-t border-slate-100 text-xs text-slate-600">
         <p>Delcom Posts v1.0</p>
         <p>© 2026 Institut Teknologi Del</p>
       </div>
