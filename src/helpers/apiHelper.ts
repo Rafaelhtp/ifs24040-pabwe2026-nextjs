@@ -59,7 +59,7 @@ export async function apiRequest<T = unknown>(
     : `${DELCOM_BASEURL}${endpoint.startsWith("/") ? "" : "/"}${endpoint}`;
 
   if (params) {
-    const url = new URL(urlString);
+    const url = new URL(urlString, window.location.origin);
     Object.entries(params).forEach(([key, value]) => {
       if (value !== undefined && value !== null) {
         url.searchParams.append(key, String(value));

@@ -1,6 +1,9 @@
-import Swal from "sweetalert2";
+// SweetAlert2 dimuat lazy (hanya saat dialog benar-benar ditampilkan) supaya tidak
+// ikut di bundle awal halaman login/register -> JS awal lebih kecil, Performance naik.
+const loadSwal = async () => (await import("sweetalert2")).default;
 
-export function showSuccessDialog(message: string, title: string = "Berhasil") {
+export async function showSuccessDialog(message: string, title: string = "Berhasil") {
+  const Swal = await loadSwal();
   return Swal.fire({
     icon: "success",
     title,
@@ -10,7 +13,8 @@ export function showSuccessDialog(message: string, title: string = "Berhasil") {
   });
 }
 
-export function showErrorDialog(message: string, title: string = "Gagal") {
+export async function showErrorDialog(message: string, title: string = "Gagal") {
+  const Swal = await loadSwal();
   return Swal.fire({
     icon: "error",
     title,
@@ -20,7 +24,8 @@ export function showErrorDialog(message: string, title: string = "Gagal") {
   });
 }
 
-export function showWarningDialog(message: string, title: string = "Peringatan") {
+export async function showWarningDialog(message: string, title: string = "Peringatan") {
+  const Swal = await loadSwal();
   return Swal.fire({
     icon: "warning",
     title,
@@ -34,6 +39,7 @@ export async function showConfirmDialog(
   message: string,
   title: string = "Konfirmasi"
 ): Promise<boolean> {
+  const Swal = await loadSwal();
   const result = await Swal.fire({
     icon: "question",
     title,
