@@ -94,20 +94,20 @@ describe("PostLayout", () => {
     });
   });
 
-  it("should redirect to /auth/login if profile loading fails", async () => {
-    vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce("invalid-token");
+  it("should still render children if profile loading fails but token exists", async () => {
+    vi.spyOn(apiHelper, "getAccessToken").mockReturnValueOnce("valid-token");
     vi.spyOn(userActions, "asyncSetProfile").mockReturnValue((() =>
-      Promise.resolve({ success: false, message: "Unauthorized" })) as any);
+      Promise.resolve({ success: false, message: "Server busy" })) as any);
 
     renderWithProviders(
       <PostLayout>
-        <div>Child</div>
+        <div data-testid="dash-child">Child</div>
       </PostLayout>,
       {
         preloadedState: {
           auth: {
             user: null,
-            token: "invalid-token",
+            token: "valid-token",
             isAuthLogin: false,
             isAuthRegister: false,
             isAuthLogout: false,
@@ -118,7 +118,7 @@ describe("PostLayout", () => {
     );
 
     await waitFor(() => {
-      expect(mockReplace).toHaveBeenCalledWith("/auth/login");
+      expect(screen.getByTestId("dash-child")).toBeInTheDocument();
     });
   });
 

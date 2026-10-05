@@ -19,6 +19,27 @@ describe("apiHelper", () => {
       putAccessToken("token-123");
       expect(localStorage.getItem(ACCESS_TOKEN_KEY)).toBe("token-123");
       expect(getAccessToken()).toBe("token-123");
+
+      // Alternative keys in localStorage
+      localStorage.clear();
+      localStorage.setItem("token", "token-alt");
+      expect(getAccessToken()).toBe("token-alt");
+
+      // From document.cookie
+      removeAccessToken();
+      expect(getAccessToken()).toBeNull();
+
+      document.cookie = "other=123";
+      expect(getAccessToken()).toBeNull();
+
+      removeAccessToken();
+      document.cookie = "delcom_access_token=cookie-tok";
+      expect(getAccessToken()).toBe("cookie-tok");
+
+      removeAccessToken();
+      document.cookie = "token=cookie-tok2";
+      expect(getAccessToken()).toBe("cookie-tok2");
+      removeAccessToken();
     });
 
     it("should remove token", () => {

@@ -28,12 +28,8 @@ export function PostLayout({ children }: PostLayoutProps) {
     }
 
     if (!user) {
-      dispatch(asyncSetProfile()).then((res) => {
-        if (!res.success) {
-          router.replace("/auth/login");
-        } else {
-          setIsChecking(false);
-        }
+      dispatch(asyncSetProfile()).then(() => {
+        setIsChecking(false);
       });
     } else {
       setIsChecking(false);

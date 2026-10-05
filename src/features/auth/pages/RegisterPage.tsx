@@ -68,8 +68,8 @@ export function RegisterPage() {
     );
 
     if (result.success) {
-      await showSuccessDialog("Pendaftaran berhasil! Silakan masuk dengan akun baru Anda.");
       router.push("/auth/login");
+      showSuccessDialog("Pendaftaran berhasil! Silakan masuk dengan akun baru Anda.");
     } else {
       const msg = result.message || "Gagal melakukan registrasi.";
       setErrorMessage(msg);

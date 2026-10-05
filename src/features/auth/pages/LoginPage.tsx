@@ -44,8 +44,8 @@ export function LoginPage() {
     );
 
     if (result.success) {
-      await showSuccessDialog("Berhasil masuk ke Delcom Posts!");
       router.push("/");
+      showSuccessDialog("Berhasil masuk ke Delcom Posts!");
     } else {
       const msg = result.message || "Gagal masuk. Periksa email dan kata sandi Anda.";
       setErrorMessage(msg);

@@ -7,18 +7,39 @@ export function getAccessToken(): string | null {
   if (typeof window === "undefined") {
     return null;
   }
-  return localStorage.getItem(ACCESS_TOKEN_KEY);
+  const fromLocal =
+    localStorage.getItem(ACCESS_TOKEN_KEY) ||
+    localStorage.getItem("token");
+  if (fromLocal) {
+    return fromLocal;
+  }
+
+  const cookies = document.cookie ? document.cookie.split(";") : [];
+  for (const c of cookies) {
+    const [key, val] = c.trim().split("=");
+    if ((key === ACCESS_TOKEN_KEY || key === "token") && val) {
+      return decodeURIComponent(val);
+    }
+  }
+
+  return null;
 }
 
 export function putAccessToken(token: string): void {
   if (typeof window !== "undefined") {
     localStorage.setItem(ACCESS_TOKEN_KEY, token);
+    localStorage.setItem("token", token);
+    document.cookie = `${ACCESS_TOKEN_KEY}=${encodeURIComponent(token)}; path=/; max-age=2592000; SameSite=Lax`;
+    document.cookie = `token=${encodeURIComponent(token)}; path=/; max-age=2592000; SameSite=Lax`;
   }
 }
 
 export function removeAccessToken(): void {
   if (typeof window !== "undefined") {
     localStorage.removeItem(ACCESS_TOKEN_KEY);
+    localStorage.removeItem("token");
+    document.cookie = `${ACCESS_TOKEN_KEY}=; path=/; max-age=0`;
+    document.cookie = `token=; path=/; max-age=0`;
   }
 }
 
