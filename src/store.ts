@@ -1,0 +1,28 @@
+import { configureStore } from "@reduxjs/toolkit";
+import authReducer from "@/features/auth/states/reducer";
+import usersReducer from "@/features/users/states/reducer";
+import postsReducer from "@/features/posts/states/reducer";
+
+export const store = configureStore({
+  reducer: {
+    auth: authReducer,
+    users: usersReducer,
+    posts: postsReducer,
+  },
+});
+
+export type RootState = ReturnType<typeof store.getState>;
+export type AppDispatch = typeof store.dispatch;
+
+export function setupStore(preloadedState?: Partial<RootState>) {
+  return configureStore({
+    reducer: {
+      auth: authReducer,
+      users: usersReducer,
+      posts: postsReducer,
+    },
+    preloadedState,
+  });
+}
+
+export type AppStore = ReturnType<typeof setupStore>;
